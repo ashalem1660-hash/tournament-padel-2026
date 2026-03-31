@@ -3,67 +3,95 @@ const SUPABASE_URL = 'https://YOUR_PROJECT.supabase.co';
 const SUPABASE_KEY = 'YOUR_SUPABASE_ANON_KEY';
 const supabaseClient = SUPABASE_URL.includes('YOUR_') ? null : supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-const toxicWords = ['נוכל', 'חלש', 'זבל', 'בושה', 'רך', 'fraud', 'trash'];
+const toxicWords = ['נוכל', 'חלש', 'זבל', 'בושה', 'גניבה', 'רמאות', 'רך', 'fraud', 'trash'];
 const sampleMessages = [
-  { name: 'AceHunter', content: 'מגיש לכם עשן לקפה של הבוקר', likes: 9 },
-  { name: 'SpinDoctor', content: 'הבק-הנד שלך ממומן על ידי תקווה', likes: 14 },
-  { name: 'NetGoblin', content: 'אזהרת נוכל במגרש 2', likes: 7 },
+  { name: 'יוגב', content: 'כבר שמרתם על המגרש המרכזי לי?', likes: 12 },
+  { name: 'ניר', content: 'תביאו אוזניות — הרעש של הווינרים שלי חזק', likes: 17 },
+  { name: 'ברק', content: 'מישהו ראה את ההגשה של עדו? גם הוא לא', likes: 8 },
 ];
 
 const pairs = [
-  { id: 1, name: 'לוס לובוס', desc: 'מעולם לא פגשו סרט רשת שלא אהבו.', stats: { skill: 92, ego: 74, trash: 81, clutch: 88 } },
-  { id: 2, name: 'נינג\'ות הרשת', desc: 'מתנקשות שקטות בלי רחמים.', stats: { skill: 89, ego: 52, trash: 63, clutch: 90 } },
-  { id: 3, name: 'סמאש ברוס', desc: 'צועקים "K.O" אחרי כל נקודה.', stats: { skill: 84, ego: 78, trash: 76, clutch: 72 } },
-  { id: 4, name: 'מאפיית הדרופ', desc: 'מרחפים כמו לוב, עוקצים כמו דרופ.', stats: { skill: 80, ego: 60, trash: 70, clutch: 69 } },
-  { id: 5, name: 'בודקי הוויב', desc: 'הפלייליסט חזק מהסרוויס.', stats: { skill: 77, ego: 85, trash: 82, clutch: 65 } },
-  { id: 6, name: 'שודדי הבייסליין', desc: 'גונבים זמן ומגרסים ראלי.', stats: { skill: 83, ego: 55, trash: 58, clutch: 74 } },
+  { id: 1, name: 'ניר ובן', desc: 'נחשבים לפייבוריטים — או שחיים על הייפ?', stats: { skill: 92, ego: 78, trash: 82, clutch: 88 } },
+  { id: 2, name: 'יוגב ועמית', desc: 'מארגני הזירה עם שרביט שיפוט וגביע ביד.', stats: { skill: 90, ego: 70, trash: 65, clutch: 90 } },
+  { id: 3, name: 'אורחי וסם', desc: 'קלאץ\' של הפתעות; מגיעים עם תיק סודות.', stats: { skill: 82, ego: 60, trash: 73, clutch: 85 } },
+  { id: 4, name: 'דניאל ונחום', desc: 'שקטים עד שהכדור מגיע אליהם.', stats: { skill: 80, ego: 55, trash: 61, clutch: 77 } },
+  { id: 5, name: 'שלם ואביעד', desc: 'אחים לרעש, אחים למשחקי רשת.', stats: { skill: 78, ego: 72, trash: 79, clutch: 74 } },
+  { id: 6, name: 'אבנרי וגיל', desc: 'מכניסים ספין ועוקצים בבדיחות.', stats: { skill: 81, ego: 68, trash: 70, clutch: 76 } },
+  { id: 7, name: 'ביטון ושמיר', desc: 'עומדים חזק בבייסליין, דוחפים כל כדור.', stats: { skill: 79, ego: 65, trash: 60, clutch: 80 } },
+  { id: 8, name: 'דין וסימונוב', desc: 'חושבים שני צעדים קדימה, לפעמים מפספסים אחד אחורה.', stats: { skill: 77, ego: 62, trash: 75, clutch: 70 } },
+  { id: 9, name: 'ברק ועומר', desc: 'חברתיים, מסוכנים כשהקהל נדלק.', stats: { skill: 76, ego: 69, trash: 67, clutch: 73 } },
+  { id: 10, name: 'הראל ואורן', desc: 'מגישים אש, לפעמים שורפים את עצמם.', stats: { skill: 74, ego: 63, trash: 66, clutch: 68 } },
+  { id: 11, name: 'עדו וערן', desc: 'באסים חזקים, רשת פחות.', stats: { skill: 73, ego: 58, trash: 69, clutch: 65 } },
 ];
 
 const schedule = [
-  { round: 'רבע גמר', matches: [
-    { a: 'לוס לובוס', b: 'שודדי הבייסליין', time: '13:00', court: 'A', live: false },
-    { a: 'נינג\'ות הרשת', b: 'בודקי הוויב', time: '14:00', court: 'B', live: true },
+  { round: 'בית א׳', matches: [
+    { a: 'ניר ובן', b: 'הראל ואורן', time: '15:10', court: '1', live: true },
+    { a: 'שלם ואביעד', b: 'אבנרי וגיל', time: '15:10', court: '2', live: true },
+    { a: 'דין וסימונוב', b: 'הראל ואורן', time: '15:30', court: '2', live: false },
+    { a: 'ניר ובן', b: 'דין וסימונוב', time: '15:50', court: '1', live: false },
+    { a: 'ניר ובן', b: 'שלם ואביעד', time: '16:10', court: '1', live: false },
+    { a: 'דין וסימונוב', b: 'שלם ואביעד', time: '16:10', court: '2', live: false },
+    { a: 'ניר ובן', b: 'אבנרי וגיל', time: '16:30', court: '1', live: false },
+    { a: 'הראל ואורן', b: 'אבנרי וגיל', time: '16:30', court: '2', live: false },
   ]},
-  { round: 'חצי גמר', matches: [
-    { a: 'מנצחי רבע 1', b: 'מנצחי רבע 2', time: '16:00', court: 'מרכזי', live: false },
+  { round: 'בית ב׳', matches: [
+    { a: 'אורחי וסם', b: 'עדו וערן', time: '15:10', court: '3', live: true },
+    { a: 'יוגב ועמית', b: 'עדו וערן', time: '15:30', court: '3', live: false },
+    { a: 'יוגב ועמית', b: 'ברק ועומר', time: '15:50', court: '3', live: false },
+    { a: 'ברק ועומר', b: 'אורחי וסם', time: '16:10', court: '3', live: false },
+    { a: 'אורחי וסם', b: 'ביטון ושמיר', time: '15:30', court: '4', live: false },
+    { a: 'ביטון ושמיר', b: 'ברק ועומר', time: '15:50', court: '4', live: false },
+    { a: 'יוגב ועמית', b: 'אורחי וסם', time: '16:10', court: '4', live: false },
+    { a: 'עדו וערן', b: 'ביטון ושמיר', time: '16:30', court: '4', live: false },
   ]},
-  { round: 'גמר', matches: [
-    { a: 'מנצחי חצי', b: 'מנצחי חצי', time: '18:00', court: 'מרכזי', live: false },
+  { round: 'פלייאוף', matches: [
+    { a: 'מקום 1 בית א׳', b: 'מקום 2 בית ב׳', time: '17:10', court: 'מרכזי', live: false },
+    { a: 'מקום 1 בית ב׳', b: 'מקום 2 בית א׳', time: '17:40', court: 'מרכזי', live: false },
+    { a: 'מנצחי חצי', b: 'מנצחי חצי', time: '18:10', court: 'מרכזי', live: false },
   ]},
 ];
 
 const standings = [
-  { pair: 'לוס לובוס', wins: 3, gameDiff: 12, gamesWon: 48, form: 'נננ' },
-  { pair: 'נינג\'ות הרשת', wins: 3, gameDiff: 9, gamesWon: 44, form: 'ננל' },
-  { pair: 'סמאש ברוס', wins: 2, gameDiff: 4, gamesWon: 36, form: 'נלנ' },
-  { pair: 'בודקי הוויב', wins: 1, gameDiff: -2, gamesWon: 29, form: 'לנל' },
-  { pair: 'מאפיית הדרופ', wins: 1, gameDiff: -6, gamesWon: 24, form: 'ללנ' },
-  { pair: 'שודדי הבייסליין', wins: 0, gameDiff: -10, gamesWon: 18, form: 'ללל' },
+  { pair: 'ניר ובן', wins: 3, gameDiff: 9, gamesWon: 18, form: 'נננ' },
+  { pair: 'יוגב ועמית', wins: 3, gameDiff: 8, gamesWon: 17, form: 'נננ' },
+  { pair: 'אורחי וסם', wins: 2, gameDiff: 3, gamesWon: 14, form: 'ננל' },
+  { pair: 'שלם ואביעד', wins: 2, gameDiff: 1, gamesWon: 12, form: 'נלנ' },
+  { pair: 'דין וסימונוב', wins: 1, gameDiff: -1, gamesWon: 10, form: 'לננ' },
+  { pair: 'אבנרי וגיל', wins: 1, gameDiff: -2, gamesWon: 9, form: 'נלל' },
+  { pair: 'ביטון ושמיר', wins: 1, gameDiff: -3, gamesWon: 8, form: 'לנל' },
+  { pair: 'ברק ועומר', wins: 0, gameDiff: -5, gamesWon: 6, form: 'ללל' },
+  { pair: 'הראל ואורן', wins: 0, gameDiff: -6, gamesWon: 5, form: 'ללל' },
+  { pair: 'עדו וערן', wins: 0, gameDiff: -7, gamesWon: 4, form: 'ללל' },
 ];
 
 const articles = [
-  { title: 'נינג\'ות הרשת מתאמנות עם כיסוי עיניים', tone: 'כי לראות את הכדור זה אוברייטד.', author: 'צוות הזירה' },
-  { title: 'לוס לובוס מגישים תלונת רעש נגד עצמם', tone: 'היללות שלהם חזקות מדי.', author: 'צוות הזירה' },
-  { title: 'בודקי הוויב מוסיפים DJ לספסל', tone: 'המאמן אומר שהפלייליסט הוא הפלייבוק.', author: 'צוות הזירה' },
-  { title: 'מאפיית הדרופ בחקירה', tone: 'לכאורה שיחדו את כוח הכבידה.', author: 'צוות הזירה' },
+  { title: 'ניר ובן – פייבוריטים או בלוף?', tone: 'כולם בטוחים שהם לוקחים, אבל מה קורה כשהשעון דופק?', author: 'צוות הזירה' },
+  { title: 'הסוס השחור של הטורניר', tone: 'יש זוג שאף אחד לא סופר – עד שהם שוברים מחבט.', author: 'צוות הזירה' },
+  { title: 'הזוג הכי אובררייטד', tone: 'חיים על הייפ וסטוריז. כמה זמן זה יחזיק?', author: 'צוות הזירה' },
+  { title: 'דראמה: האם יהיה VAR על טרשים?', tone: 'יוגב מבטיח לשפוט. החברים פחות רגועים.', author: 'צוות הזירה' },
 ];
 
 const rankings = [
-  { pair: 'לוס לובוס', blurb: 'אנרגיית אלפא + כישוף ספין.' },
-  { pair: 'נינג\'ות הרשת', blurb: 'דרופ-וולי שנעלם. גם נינג\'ות.' },
-  { pair: 'סמאש ברוס', blurb: 'גם בלי שלט הם מנצחים.' },
-  { pair: 'בודקי הוויב', blurb: 'מנצחים או לא – הפלייליסט שולט.' },
-  { pair: 'מאפיית הדרופ', blurb: 'כוח הכבידה הוא בן הזוג שלהם.' },
-  { pair: 'שודדי הבייסליין', blurb: 'גונבים זמן, לא מערכות.' },
+  { pair: 'ניר ובן', blurb: 'הייפ אדיר, צריכים להוכיח שזה לא רק קבוצת ווטסאפ.' },
+  { pair: 'יוגב ועמית', blurb: 'בעל הבית השתגע. גם כששופטים – מנצחים.' },
+  { pair: 'אורחי וסם', blurb: 'הפתעה שקטה. תפסיקו להתעלם.' },
+  { pair: 'שלם ואביעד', blurb: 'מגיעים עם ווליום 11 — גם בהגשות.' },
+  { pair: 'דין וסימונוב', blurb: 'מתמטיקת נקודות, לפעמים שוכחים לשים ווינר.' },
+  { pair: 'אבנרי וגיל', blurb: 'מכונת ספין והומור שחור.' },
+  { pair: 'ביטון ושמיר', blurb: 'חזקים בבייסליין, פחות בלהצטלם.' },
+  { pair: 'ברק ועומר', blurb: 'חיי הלילה פוגשים חמש על שתיים.' },
+  { pair: 'הראל ואורן', blurb: 'גארדיאני הסרב. צריכים יותר רשת.' },
+  { pair: 'עדו וערן', blurb: 'פצצות מצד אחד, דאבל פולט מהצד השני.' },
 ];
 
 const insults = [
+  'לא ראיתי כזה חוסר כישרון מאז כיתה ח׳.',
+  'אתם חלשים יותר מהקפה במתחם.',
   'הסרב שלך עם פינג של וייפי.',
-  'אתה מתחמם יותר חזק ממה שאתה משחק.',
   'רגליים בחסות חול טובעני.',
-  'הבק-הנד שלך שמועה בלבד.',
-  'אפילו הכדור רוצה חילוף.',
-  'המאמן ביקש "תפתיע אותם" לא "תפתיע אותי".',
+  'בושה, אפילו ה-Waze מבקש נתיב עוקף.',
+  'זו לא הקנטה – זו קריאה לעזרה.',
 ];
 
 function highlightToxic(text) {
