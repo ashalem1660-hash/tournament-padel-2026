@@ -55,7 +55,7 @@ body { background: #050505; }
 
 @media (max-width: 768px) {
   header nav {
-    display: flex;
+    display: flex !important;
     gap: 8px;
     overflow-x: auto;
     padding: 6px 0;
