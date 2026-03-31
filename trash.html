@@ -1,0 +1,80 @@
+﻿<!DOCTYPE html>
+<html lang="he" dir="rtl" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>זירת הקנטות</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Heebo:wght@400;500;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: { display: ['Space Grotesk','Heebo','sans-serif'] },
+          colors: { neon: '#39FF14', electric: '#00C6FF', blood: '#FF2948', arena: '#050505', panel: '#0B0B0F' },
+          boxShadow: { glow: '0 0 25px rgba(57,255,20,0.35)', neon: '0 0 30px rgba(0,198,255,0.35)' },
+        },
+      },
+    }
+  </script>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body class="font-display bg-arena text-white min-h-screen" data-page="trash">
+  <div class="noise"></div>
+  <header class="sticky top-0 z-40 backdrop-blur bg-black/70 border-b border-white/5">
+    <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="h-10 w-10 rounded-lg bg-gradient-to-br from-neon to-electric shadow-neon animate-pulse"></div>
+        <div>
+          <p class="text-xs uppercase tracking-[0.3em] text-electric">זירת הקנטות</p>
+          <h1 class="text-xl font-bold">נותנים בראש בלי פילטר</h1>
+        </div>
+      </div>
+      <nav class="hidden md:flex gap-4 text-sm">
+        <a class="nav-pill" href="/index.html">בית</a>
+        <a class="nav-pill active" href="/trash.html">זירת הקנטות</a>
+        <a class="nav-pill" href="/poll.html">מי ינצח</a>
+        <a class="nav-pill" href="/schedule.html">לוח משחקים</a>
+        <a class="nav-pill" href="/standings.html">טבלה חיה</a>
+        <a class="nav-pill" href="/pairs.html">זוגות</a>
+        <a class="nav-pill" href="/articles.html">כתבות</a>
+        <a class="nav-pill" href="/rankings.html">דירוג עוצמה</a>
+        <a class="nav-pill" href="/admin.html">ניהול</a>
+      </nav>
+      <span class="px-4 py-2 rounded-full text-xs bg-blood shadow-glow">זמן אמת</span>
+    </div>
+  </header>
+
+  <main class="max-w-6xl mx-auto px-4 pb-16 space-y-8">
+    <section class="grid md:grid-cols-3 gap-6 mt-8">
+      <div class="md:col-span-2 card space-y-4">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-xs uppercase tracking-[0.2em] text-electric">פיד זירה</p>
+            <h2 class="text-2xl font-bold">הזרם החי</h2>
+          </div>
+          <button id="generate-trash" class="px-3 py-2 rounded-lg bg-panel border border-white/10 hover:border-neon hover:shadow-neon text-sm">תן משפט</button>
+        </div>
+        <div class="flex flex-col gap-3" id="trash-feed"></div>
+      </div>
+      <div class="card space-y-4">
+        <div>
+          <p class="text-xs uppercase tracking-[0.2em] text-electric">הבמה שלך</p>
+          <h2 class="text-xl font-bold">שלח עקיצה</h2>
+        </div>
+        <input id="name-input" class="field" placeholder="שם לוחם" />
+        <textarea id="message-input" class="field h-24" placeholder="תכתוב משהו שיכאב"></textarea>
+        <button id="send-message" class="btn-primary w-full">שליחה</button>
+        <div class="text-xs text-white/50">מילים רעילות מודגשות אוטומטית. תשאירו את זה מצחיק, לא שנאה.</div>
+        <div class="rounded-xl bg-black/40 border border-white/5 p-3 text-sm space-y-1" id="leaders"></div>
+      </div>
+    </section>
+  </main>
+
+  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+  <script src="/app.js"></script>
+</body>
+</html>

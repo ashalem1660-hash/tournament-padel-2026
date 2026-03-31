@@ -1,0 +1,76 @@
+﻿<!DOCTYPE html>
+<html lang="he" dir="rtl" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>סקר: מי ינצח?</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Heebo:wght@400;500;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: { display: ['Space Grotesk','Heebo','sans-serif'] },
+          colors: { neon: '#39FF14', electric: '#00C6FF', blood: '#FF2948', arena: '#050505', panel: '#0B0B0F' },
+          boxShadow: { glow: '0 0 25px rgba(57,255,20,0.35)', neon: '0 0 30px rgba(0,198,255,0.35)' },
+        },
+      },
+    }
+  </script>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body class="font-display bg-arena text-white min-h-screen" data-page="poll">
+  <div class="noise"></div>
+  <header class="sticky top-0 z-40 backdrop-blur bg-black/70 border-b border-white/5">
+    <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="h-10 w-10 rounded-lg bg-gradient-to-br from-neon to-electric shadow-neon animate-pulse"></div>
+        <div>
+          <p class="text-xs uppercase tracking-[0.3em] text-electric">מי ינצח?</p>
+          <h1 class="text-xl font-bold">דופקים את הדופק של הקהל</h1>
+        </div>
+      </div>
+      <nav class="hidden md:flex gap-4 text-sm">
+        <a class="nav-pill" href="/index.html">בית</a>
+        <a class="nav-pill" href="/trash.html">זירת הקנטות</a>
+        <a class="nav-pill active" href="/poll.html">מי ינצח</a>
+        <a class="nav-pill" href="/schedule.html">לוח משחקים</a>
+        <a class="nav-pill" href="/standings.html">טבלה חיה</a>
+        <a class="nav-pill" href="/pairs.html">זוגות</a>
+        <a class="nav-pill" href="/articles.html">כתבות</a>
+        <a class="nav-pill" href="/rankings.html">דירוג עוצמה</a>
+        <a class="nav-pill" href="/admin.html">ניהול</a>
+      </nav>
+      <span class="px-4 py-2 rounded-full text-xs bg-electric shadow-neon">חי</span>
+    </div>
+  </header>
+
+  <main class="max-w-6xl mx-auto px-4 pb-16 space-y-10">
+    <section class="mt-8 grid md:grid-cols-2 gap-6">
+      <div class="card space-y-4">
+        <div>
+          <p class="text-xs uppercase tracking-[0.2em] text-electric">הצבעה</p>
+          <h2 class="text-2xl font-bold">בחרו את הזוג</h2>
+        </div>
+        <div id="poll-options" class="space-y-3"></div>
+      </div>
+      <div class="card space-y-4">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-xs uppercase tracking-[0.2em] text-electric">תוצאות חיות</p>
+            <h2 class="text-xl font-bold">תרשים עמודות</h2>
+          </div>
+          <span class="text-xs text-white/50">מתעדכן בזמן אמת</span>
+        </div>
+        <div class="space-y-3" id="poll-results"></div>
+      </div>
+    </section>
+  </main>
+
+  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+  <script src="/app.js"></script>
+</body>
+</html>
