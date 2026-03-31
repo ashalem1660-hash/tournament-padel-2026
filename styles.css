@@ -54,5 +54,12 @@ body { background: #050505; }
 #admin-log { border: 1px dashed rgba(255,255,255,0.1); padding: 12px; border-radius: 12px; background: rgba(0,0,0,0.25); }
 
 @media (max-width: 768px) {
-  nav { display: none; }
+  header nav {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    padding: 6px 0;
+  }
+  header nav::-webkit-scrollbar { height: 6px; }
+  header nav::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 999px; }
 }
