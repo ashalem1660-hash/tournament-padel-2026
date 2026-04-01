@@ -35,13 +35,13 @@
   <div class="noise"></div>
   <header class="sticky top-0 z-40 backdrop-blur bg-black/70 border-b border-white/5">
     <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
-      <div class="flex items-center gap-3">
+      <a href="/index.html" class="flex items-center gap-3 hover:scale-[1.02] transition">
         <div class="h-10 w-10 rounded-lg bg-gradient-to-br from-neon to-electric shadow-neon animate-pulse"></div>
         <div>
           <p class="text-xs uppercase tracking-[0.3em] text-electric">פאדל יוגב</p>
           <h1 class="text-xl font-bold">חדר הפיקוד של הטורניר</h1>
         </div>
-      </div>
+      </a>
       <nav class="flex gap-3 text-sm flex-wrap md:flex-nowrap">
         <a class="nav-pill" href="/index.html">בית</a>
         <a class="nav-pill" href="/trash.html">זירת הקנטות</a>
@@ -53,7 +53,7 @@
         <a class="nav-pill" href="/rankings.html">דירוג עוצמה</a>
         <a class="nav-pill" href="/admin.html">ניהול</a>
       </nav>
-      <a href="/trash.html" class="px-4 py-2 bg-blood text-sm font-semibold rounded-full shadow-glow hover:scale-105 hover:shadow-neon transition">כניסה לזירה</a>
+      <a href="/trash.html" class="px-4 py-2 bg-blood text-sm font-semibold rounded-full shadow-glow hover:scale-105 hover:shadow-neon transition cta-desktop">כניסה לזירה</a>
     </div>
   </header>
 
@@ -103,6 +103,10 @@
           </div>
           <div class="h-52 rounded-2xl overflow-hidden border border-white/10">
             <iframe src="https://embed.waze.com/iframe?zoom=16&lat=32.1847&lon=34.8713" class="w-full h-full"></iframe>
+          </div>
+          <div class="flex flex-wrap gap-3 text-sm">
+            <a class="nav-pill" href="https://www.waze.com/ul?ll=32.1847%2C34.8713&navigate=yes" target="_blank">פתחו ב-Waze</a>
+            <a class="nav-pill" href="https://www.google.com/maps/dir/?api=1&destination=32.1847,34.8713" target="_blank">פתחו ב-Google Maps</a>
           </div>
         </div>
       </div>
