@@ -54,13 +54,14 @@ body { background: #050505; }
 #admin-log { border: 1px dashed rgba(255,255,255,0.1); padding: 12px; border-radius: 12px; background: rgba(0,0,0,0.25); }
 
 @media (max-width: 768px) {
+  .mobile-toggle { display: block; }
   header nav {
-    display: flex !important;
-    flex-wrap: wrap;
+    display: none;
+    flex-direction: column;
     gap: 6px;
-    padding: 6px 0;
-    justify-content: flex-end;
+    padding: 10px 0 6px;
   }
-  .nav-pill { padding: 7px 10px; font-size: 13px; }
+  header.open nav { display: flex !important; }
+  .nav-pill { padding: 9px 12px; font-size: 14px; width: 100%; text-align: center; }
   .cta-desktop { display: none; }
 }

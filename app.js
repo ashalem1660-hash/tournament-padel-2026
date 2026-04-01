@@ -124,6 +124,13 @@ function renderCountdown() {
   setInterval(tick, 1000);
 }
 
+function setupMobileNav() {
+  const btn = document.getElementById('mobile-menu-btn');
+  const header = document.querySelector('header');
+  if (!btn || !header) return;
+  btn.addEventListener('click', () => header.classList.toggle('open'));
+}
+
 function renderHomeFeed() {
   const feed = document.getElementById('live-trash');
   const pollPreview = document.getElementById('poll-preview');
@@ -450,6 +457,7 @@ function loadLocal(key) {
 function initPage() {
   const page = document.body.dataset.page;
   renderCountdown();
+  setupMobileNav();
   renderHomeFeed();
   switch(page) {
     case 'trash':
