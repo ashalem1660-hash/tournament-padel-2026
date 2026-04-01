@@ -52,18 +52,22 @@ const schedule = [
   ]},
 ];
 
-const standings = [
-  { pair: 'ניר ובן', wins: 3, gameDiff: 9, gamesWon: 18, form: 'נננ' },
-  { pair: 'יוגב ועמית', wins: 3, gameDiff: 8, gamesWon: 17, form: 'נננ' },
-  { pair: 'אורחי וסם', wins: 2, gameDiff: 3, gamesWon: 14, form: 'ננל' },
-  { pair: 'שלם ואביעד', wins: 2, gameDiff: 1, gamesWon: 12, form: 'נלנ' },
-  { pair: 'דין וסימונוב', wins: 1, gameDiff: -1, gamesWon: 10, form: 'לננ' },
-  { pair: 'אבנרי וגיל', wins: 1, gameDiff: -2, gamesWon: 9, form: 'נלל' },
-  { pair: 'ביטון ושמיר', wins: 1, gameDiff: -3, gamesWon: 8, form: 'לנל' },
-  { pair: 'ברק ועומר', wins: 0, gameDiff: -5, gamesWon: 6, form: 'ללל' },
-  { pair: 'הראל ואורן', wins: 0, gameDiff: -6, gamesWon: 5, form: 'ללל' },
-  { pair: 'עדו וערן', wins: 0, gameDiff: -7, gamesWon: 4, form: 'ללל' },
-];
+const groupStages = {
+  'בית א׳': [
+    { pair: 'ניר ובן', wins: 0, gameDiff: 0, gamesWon: 0 },
+    { pair: 'שלם ואביעד', wins: 0, gameDiff: 0, gamesWon: 0 },
+    { pair: 'אבנרי וגיל', wins: 0, gameDiff: 0, gamesWon: 0 },
+    { pair: 'דין וסימונוב', wins: 0, gameDiff: 0, gamesWon: 0 },
+    { pair: 'הראל ואורן', wins: 0, gameDiff: 0, gamesWon: 0 },
+  ],
+  'בית ב׳': [
+    { pair: 'יוגב ועמית', wins: 0, gameDiff: 0, gamesWon: 0 },
+    { pair: 'אורחי וסם', wins: 0, gameDiff: 0, gamesWon: 0 },
+    { pair: 'ביטון ושמיר', wins: 0, gameDiff: 0, gamesWon: 0 },
+    { pair: 'ברק ועומר', wins: 0, gameDiff: 0, gamesWon: 0 },
+    { pair: 'עדו וערן', wins: 0, gameDiff: 0, gamesWon: 0 },
+  ],
+};
 
 const articles = [
   { title: 'ניר ובן – פייבוריטים או בלוף?', tone: 'כולם בטוחים שהם לוקחים, אבל מה קורה כשהשעון דופק?', author: 'צוות הזירה' },
@@ -153,6 +157,8 @@ function renderTrashArena() {
         <p class="text-white/80" >${highlightToxic(m.content)}</p>
       </div>`).join('');
   };
+  const existing = loadLocal('trashMessages') || sampleMessages;
+  sampleMessages.splice(0, sampleMessages.length, ...existing);
   render(sampleMessages);
 
   const likeHandler = e => {
@@ -177,6 +183,7 @@ function renderTrashArena() {
     msgInput.value = '';
     nameInput.value = name;
     leaders && updateLeaders(leaders);
+    saveLocal('trashMessages', sampleMessages);
     await pushMessage(entry);
   });
 
@@ -203,7 +210,8 @@ function renderPoll() {
   const options = document.getElementById('poll-options');
   const results = document.getElementById('poll-results');
   if (!options) return;
-  const votes = new Map(pairs.map(p => [p.id, Math.floor(Math.random()*40)+10]));
+  const storedVotes = loadLocal('pollVotes');
+  const votes = storedVotes ? new Map(storedVotes) : new Map(pairs.map(p => [p.id, 0]));
   const draw = () => {
     const total = Array.from(votes.values()).reduce((a,b)=>a+b,0) || 1;
     results.innerHTML = pairs.map(p => {
@@ -229,6 +237,7 @@ function renderPoll() {
     if (!btn) return;
     const id = Number(btn.dataset.id);
     votes.set(id, (votes.get(id)||0)+1);
+    saveLocal('pollVotes', Array.from(votes.entries()));
     draw();
     await pushVote(id);
   });
@@ -264,31 +273,50 @@ function renderSchedule() {
 }
 
 function renderStandings() {
-  const table = document.getElementById('standings-table');
-  if (!table) return;
-  const sorted = [...standings].sort((a,b) => b.wins - a.wins || b.gameDiff - a.gameDiff || b.gamesWon - a.gamesWon);
-  table.innerHTML = `
-    <thead class="table-head">
-      <tr>
-        <th class="text-left py-2">#</th>
-        <th class="text-left">זוג</th>
-        <th class="text-right">ניצחונות</th>
-        <th class="text-right">הפרש מערכות</th>
-        <th class="text-right">משחקונים</th>
-        <th class="text-right">פורם</th>
-      </tr>
-    </thead>
-    <tbody>
-      ${sorted.map((r, idx) => `
-        <tr class="${idx < 2 ? 'highlight' : ''}">
-          <td class="py-2">${idx+1}</td>
-          <td>${r.pair}</td>
-          <td class="text-right">${r.wins}</td>
-          <td class="text-right">${r.gameDiff}</td>
-          <td class="text-right">${r.gamesWon}</td>
-          <td class="text-right text-white/60">${r.form}</td>
-        </tr>`).join('')}
-    </tbody>`;
+  const container = document.getElementById('standings-groups');
+  if (!container) return;
+  const data = loadLocal('groupStages') || groupStages;
+  const render = () => {
+    container.innerHTML = Object.entries(data).map(([groupName, rows]) => {
+      const sorted = [...rows].sort((a,b) => b.wins - a.wins || b.gameDiff - a.gameDiff || b.gamesWon - a.gamesWon);
+      return `
+        <div class="card space-y-3">
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="text-xs uppercase tracking-[0.2em] text-electric">${groupName}</p>
+              <p class="text-sm text-white/60">לחצו לעדכון תוצאה</p>
+            </div>
+            <span class="pill">Top 2 עולים</span>
+          </div>
+          <div class="space-y-2">
+            ${sorted.map((r, idx) => `
+              <div class="p-3 rounded-xl border ${idx<2?'border-neon/50 bg-black/40 shadow-neon':'border-white/10 bg-black/25'} flex items-center gap-2">
+                <div class="flex-1">
+                  <p class="font-semibold">${r.pair}</p>
+                  <p class="text-xs text-white/50">ניצחונות: ${r.wins} • הפרש: ${r.gameDiff} • משחקונים: ${r.gamesWon}</p>
+                </div>
+                <div class="flex gap-1">
+                  <input class="field w-16 text-center" data-field="wins" data-group="${groupName}" data-pair="${r.pair}" placeholder="W" value="${r.wins}">
+                  <input class="field w-16 text-center" data-field="gameDiff" data-group="${groupName}" data-pair="${r.pair}" placeholder="+/-" value="${r.gameDiff}">
+                  <input class="field w-16 text-center" data-field="gamesWon" data-group="${groupName}" data-pair="${r.pair}" placeholder="GW" value="${r.gamesWon}">
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        </div>`;
+    }).join('');
+  };
+  container.addEventListener('change', e => {
+    const input = e.target;
+    const g = input.dataset.group, p = input.dataset.pair, field = input.dataset.field;
+    if (!g || !p || !field) return;
+    const groupArr = data[g];
+    const row = groupArr.find(r => r.pair === p);
+    row[field] = Number(input.value) || 0;
+    saveLocal('groupStages', data);
+    render();
+  });
+  render();
 }
 
 function renderPairs() {
@@ -407,6 +435,16 @@ function subscribeVotes(votes, draw) {
     votes.set(id, (votes.get(id)||0)+1);
     draw();
   }).subscribe();
+}
+
+function saveLocal(key, value) {
+  try { localStorage.setItem(key, JSON.stringify(value)); } catch (_) {}
+}
+function loadLocal(key) {
+  try {
+    const raw = localStorage.getItem(key);
+    return raw ? JSON.parse(raw) : null;
+  } catch (_) { return null; }
 }
 
 function initPage() {
