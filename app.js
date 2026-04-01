@@ -386,7 +386,7 @@ function renderRankings() {
           <p class="text-sm text-white/60">${r.blurb}</p>
           <p class="text-xs text-white/50">הצבעות: ${r.votes||0}</p>
         </div>
-        <button class="nav-pill" data-pair="${r.pair}">דרג</button>
+        <button class="nav-pill" data-pair="${r.pair}">בחר</button>
       </div>`).join('');
   };
   list.addEventListener('click', async e => {
