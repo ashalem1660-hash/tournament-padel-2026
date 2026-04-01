@@ -119,9 +119,15 @@ function renderCountdown() {
 
 function setupMobileNav() {
   const btn = document.getElementById('mobile-menu-btn');
-  const header = document.querySelector('header');
-  if (!btn || !header) return;
-  btn.addEventListener('click', () => header.classList.toggle('open'));
+  const drawer = document.getElementById('drawer');
+  const overlay = document.getElementById('drawer-overlay');
+  if (!btn || !drawer || !overlay) return;
+  const close = () => { drawer.classList.remove('open'); overlay.classList.remove('open'); };
+  btn.addEventListener('click', () => {
+    drawer.classList.toggle('open');
+    overlay.classList.toggle('open');
+  });
+  overlay.addEventListener('click', close);
 }
 
 function renderHomeFeed() {
