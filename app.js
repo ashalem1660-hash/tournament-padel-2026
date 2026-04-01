@@ -69,24 +69,17 @@ const groupStages = {
   ],
 };
 
-const articles = [
-  { title: 'ניר ובן – פייבוריטים או בלוף?', tone: 'כולם בטוחים שהם לוקחים, אבל מה קורה כשהשעון דופק?', author: 'צוות הזירה' },
-  { title: 'הסוס השחור של הטורניר', tone: 'יש זוג שאף אחד לא סופר – עד שהם שוברים מחבט.', author: 'צוות הזירה' },
-  { title: 'הזוג הכי אובררייטד', tone: 'חיים על הייפ וסטוריז. כמה זמן זה יחזיק?', author: 'צוות הזירה' },
-  { title: 'דראמה: האם יהיה VAR על טרשים?', tone: 'יוגב מבטיח לשפוט. החברים פחות רגועים.', author: 'צוות הזירה' },
-];
-
 const rankings = [
-  { pair: 'ניר ובן', blurb: 'הייפ אדיר, צריכים להוכיח שזה לא רק קבוצת ווטסאפ.' },
-  { pair: 'יוגב ועמית', blurb: 'בעל הבית השתגע. גם כששופטים – מנצחים.' },
-  { pair: 'אורחי וסם', blurb: 'הפתעה שקטה. תפסיקו להתעלם.' },
-  { pair: 'שלם ואביעד', blurb: 'מגיעים עם ווליום 11 — גם בהגשות.' },
-  { pair: 'דין וסימונוב', blurb: 'מתמטיקת נקודות, לפעמים שוכחים לשים ווינר.' },
-  { pair: 'אבנרי וגיל', blurb: 'מכונת ספין והומור שחור.' },
-  { pair: 'ביטון ושמיר', blurb: 'חזקים בבייסליין, פחות בלהצטלם.' },
-  { pair: 'ברק ועומר', blurb: 'חיי הלילה פוגשים חמש על שתיים.' },
-  { pair: 'הראל ואורן', blurb: 'גארדיאני הסרב. צריכים יותר רשת.' },
-  { pair: 'עדו וערן', blurb: 'פצצות מצד אחד, דאבל פולט מהצד השני.' },
+  { pair: 'ניר ובן', blurb: 'הייפ אדיר, צריכים להוכיח שזה לא רק קבוצת ווטסאפ.', votes: 0 },
+  { pair: 'יוגב ועמית', blurb: 'בעל הבית השתגע. גם כששופטים – מנצחים.', votes: 0 },
+  { pair: 'אורחי וסם', blurb: 'הפתעה שקטה. תפסיקו להתעלם.', votes: 0 },
+  { pair: 'שלם ואביעד', blurb: 'מגיעים עם ווליום 11 — גם בהגשות.', votes: 0 },
+  { pair: 'דין וסימונוב', blurb: 'מתמטיקת נקודות, לפעמים שוכחים לשים ווינר.', votes: 0 },
+  { pair: 'אבנרי וגיל', blurb: 'מכונת ספין והומור שחור.', votes: 0 },
+  { pair: 'ביטון ושמיר', blurb: 'חזקים בבייסליין, פחות בלהצטלם.', votes: 0 },
+  { pair: 'ברק ועומר', blurb: 'חיי הלילה פוגשים חמש על שתיים.', votes: 0 },
+  { pair: 'הראל ואורן', blurb: 'גארדיאני הסרב. צריכים יותר רשת.', votes: 0 },
+  { pair: 'עדו וערן', blurb: 'פצצות מצד אחד, דאבל פולט מהצד השני.', votes: 0 },
 ];
 
 const insults = [
@@ -353,25 +346,54 @@ function renderStat(label, value) {
 function renderArticles() {
   const grid = document.getElementById('articles-grid');
   if (!grid) return;
-  grid.innerHTML = articles.map(a => `
-    <article class="card space-y-2">
-      <h3 class="text-xl font-bold">${a.title}</h3>
-      <p class="text-sm text-white/70">${a.tone}</p>
-      <p class="text-xs text-white/50">מאת ${a.author}</p>
+  grid.innerHTML = pairs.map(p => `
+    <article class="card space-y-3">
+      <div class="flex items-center justify-between">
+        <h3 class="text-xl font-bold">${p.name}</h3>
+        <span class="pill">כתבת אופי</span>
+      </div>
+      <p class="text-sm text-white/70">${p.desc}</p>
+      <details class="bg-black/30 border border-white/10 rounded-xl p-3 text-sm text-white/70">
+        <summary class="cursor-pointer text-electric">פתחו כתבה</summary>
+        <div class="space-y-2 pt-2">
+          <p>🔥 סקאוטינג: ${p.stats.skill}% סקיל, ${p.stats.clutch}% קלאץ'.</p>
+          <p>😤 אגו: ${p.stats.ego}% — האם זה דלק או דליקה?</p>
+          <p>💣 Trash Meter: ${p.stats.trash}% — כמה רחוק ילכו במלחמת מילים?</p>
+          <p>🎯 סיפור: ${sampleStory(p.name)}</p>
+        </div>
+      </details>
     </article>`).join('');
 }
 
 function renderRankings() {
   const list = document.getElementById('rankings-list');
   if (!list) return;
-  list.innerHTML = rankings.map((r, idx) => `
-    <div class="card flex items-center gap-4">
-      <div class="text-3xl font-black text-electric">${idx+1}</div>
-      <div>
-        <p class="text-lg font-semibold">${r.pair}</p>
-        <p class="text-sm text-white/60">${r.blurb}</p>
-      </div>
-    </div>`).join('');
+  const stored = loadLocal('rankVotes');
+  if (stored) stored.forEach((v,i)=> { if(rankings[i]) rankings[i].votes = v.votes ?? rankings[i].votes; });
+  const render = () => {
+    const sorted = [...rankings].sort((a,b)=> (b.votes||0) - (a.votes||0));
+    list.innerHTML = sorted.map((r, idx) => `
+      <div class="card flex items-center gap-4">
+        <div class="text-3xl font-black text-electric">${idx+1}</div>
+        <div class="flex-1">
+          <p class="text-lg font-semibold">${r.pair}</p>
+          <p class="text-sm text-white/60">${r.blurb}</p>
+          <p class="text-xs text-white/50">הצבעות: ${r.votes||0}</p>
+        </div>
+        <button class="nav-pill" data-pair="${r.pair}">דרג</button>
+      </div>`).join('');
+  };
+  list.addEventListener('click', async e => {
+    const btn = e.target.closest('button[data-pair]');
+    if (!btn) return;
+    const name = btn.dataset.pair;
+    const row = rankings.find(r=>r.pair===name);
+    row.votes = (row.votes||0)+1;
+    saveLocal('rankVotes', rankings);
+    render();
+    await pushRankVote(name);
+  });
+  render();
 }
 
 function renderAdmin() {
@@ -422,6 +444,21 @@ async function pushScores(scores) {
   if (!supabaseClient) return;
   const rows = Object.entries(scores).map(([k,v]) => ({ key: k, value: v }));
   await supabaseClient.from('matches').upsert(rows);
+}
+
+async function pushRankVote(pairName) {
+  if (!supabaseClient) return;
+  await supabaseClient.from('power_votes').insert({ pair: pairName });
+}
+
+function sampleStory(name){
+  const stories = [
+    'מדברים גדול, אבל מה יקרה בנקודה מכרעת?',
+    'באו לנצח וגם להטריף – הקהל מחכה לקליפים.',
+    'הם קוראים לזה חופשה, היריבים קוראים לזה סיוט.',
+    'נשבעו שלא יפסידו לאף אחד מרעננה. נראה.',
+  ];
+  return stories[Math.floor(Math.random()*stories.length)];
 }
 
 function subscribeMessages(render, leaders) {
